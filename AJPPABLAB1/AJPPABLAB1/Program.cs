@@ -2,11 +2,13 @@
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using System.Data.SqlClient;
+using System.Data;
 using System.Globalization;
 using System.Diagnostics;
 using AJPPABLAB1.ModelsEF;
 using Microsoft.EntityFrameworkCore;
 using AJPPABLAB1.ModelsDapper;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AJPPABLAB1
 {
@@ -59,13 +61,15 @@ namespace AJPPABLAB1
             //Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
             #endregion 
 
-            await SaveAllCollection(imported_kody);
+            //await SaveAllCollection(imported_kody);
 
             //await EFsaveOneRecord(imported_kody, _context);
 
             //await DappersaveOneRecord(imported_kody, kodyPocztoweRepository);
 
             //await DapperSaveAll(imported_kody, kodyPocztoweRepository);
+
+            await BulkCopySaveAll(imported_kody);
         }
 
         static async Task ClearTable()
@@ -79,6 +83,45 @@ namespace AJPPABLAB1
 
                 await command.ExecuteNonQueryAsync();
             }
+        }
+
+        static async Task BulkCopySaveAll(List<Kody> kody)
+        {
+            DataTable sourceData = new DataTable();
+            sourceData.Columns.Add("kod_pocztowy");
+            sourceData.Columns.Add("adres");
+            sourceData.Columns.Add("miejscowosc");
+            sourceData.Columns.Add("wojewodztwo");
+            sourceData.Columns.Add("powiat");
+
+            for(int i = 0; i < kody.Count; i++)
+            {
+                sourceData.Rows.Add(new object[] {kody[i].kod_pocztowy, kody[i], kody[i].miejscowosc, kody[i].wojewodztwo, kody[i].powiat });
+            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            TimeSpan sampleTimeSpan = new TimeSpan();
+            int samples = 10;
+
+            for(int i = 1; i <= samples; i++)
+            {
+                await ClearTable();
+
+                stopwatch.Start();
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connectionString, SqlBulkCopyOptions.KeepIdentity))
+                {
+                    bulkCopy.DestinationTableName = "dbo.Kody_pocztowe";
+                    await bulkCopy.WriteToServerAsync(sourceData);
+                }
+                stopwatch.Stop();
+                sampleTimeSpan += stopwatch.Elapsed;
+                Console.WriteLine($"[{i}] SQLBulkCopy Saving Time is {stopwatch.Elapsed}");
+
+                stopwatch.Restart();
+            }
+
+            sampleTimeSpan = sampleTimeSpan.Divide(samples);
+            Console.WriteLine($"Mean SQLBulkCopy Saving Time is {sampleTimeSpan}");
         }
 
         static async Task DapperSaveAll(List<Kody> kody, KodyPocztoweRepository kodyPocztoweRepository)

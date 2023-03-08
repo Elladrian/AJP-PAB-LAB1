@@ -3245,7 +3245,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Adm.Ole.Hud\\.nuget\\packages\\": {},
+    "C:\\Users\\oleksii.hudzishevsky\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
@@ -3254,14 +3254,14 @@
       "projectUniqueName": "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj",
       "projectName": "AJPPABLAB1",
       "projectPath": "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj",
-      "packagesPath": "C:\\Users\\Adm.Ole.Hud\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\oleksii.hudzishevsky\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Adm.Ole.Hud\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\oleksii.hudzishevsky\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
