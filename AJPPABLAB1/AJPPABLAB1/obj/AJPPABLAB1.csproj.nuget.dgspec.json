@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\oleks\\Projects\\ajp\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj": {}
+    "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\oleks\\Projects\\ajp\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj": {
+    "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\oleks\\Projects\\ajp\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj",
+        "projectUniqueName": "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj",
         "projectName": "AJPPABLAB1",
-        "projectPath": "C:\\Users\\oleks\\Projects\\ajp\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj",
-        "packagesPath": "C:\\Users\\oleks\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\oleks\\Projects\\ajp\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\obj\\",
+        "projectPath": "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\AJPPABLAB1.csproj",
+        "packagesPath": "C:\\Users\\Adm.Ole.Hud\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\oleksii.hudzishevsky\\Projects\\ajp\\PAB\\AJP-PAB-LAB1\\AJPPABLAB1\\AJPPABLAB1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\oleks\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Adm.Ole.Hud\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -48,6 +48,14 @@
             "CsvHelper": {
               "target": "Package",
               "version": "[30.0.1, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -94,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

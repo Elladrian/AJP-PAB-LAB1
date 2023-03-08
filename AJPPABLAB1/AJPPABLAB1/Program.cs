@@ -4,20 +4,23 @@ using CsvHelper.Configuration.Attributes;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Diagnostics;
-//using AJPPABLAB1.Models;
+using AJPPABLAB1.ModelsEF;
 using Microsoft.EntityFrameworkCore;
+using AJPPABLAB1.ModelsDapper;
 
 namespace AJPPABLAB1
 {
     internal class Program
     {
         static List<Kody> imported_kody = new List<Kody>();
-        static string connectionString = @"Server=LOCALHOST\LOCALDATABASE;Database=AJPPABLAB1;Trusted_Connection=True";
+        static string connectionString = @"Server=GORWPC0008\SQLDEVELOPER;Database=AJPPABLAB1;User ID=Administrator;Password=cisco123!L;TrustServerCertificate=True;Encrypt=False";
 
         static async Task Main(string[] args)
         {
             Stopwatch stopwatch = new Stopwatch();
-            //Ajppablab1Context _context = new Ajppablab1Context();
+            Ajppablab1Context _context = new Ajppablab1Context();
+            DapperContext _dapperContext = new DapperContext(connectionString);
+            KodyPocztoweRepository kodyPocztoweRepository = new KodyPocztoweRepository(_dapperContext);
 
             stopwatch.Start();
             await importCSV();
@@ -25,38 +28,44 @@ namespace AJPPABLAB1
             Console.WriteLine($"Elapsed Import Time is {stopwatch.Elapsed}");
             stopwatch.Restart();
 
-            #region saving by record
-            const int samples = 1;
-            Stopwatch meanRecordStopwatch = new Stopwatch();
-            TimeSpan recordTimeSpan = new TimeSpan();
-            TimeSpan sampleTimeSpan = new TimeSpan();
-            for (int i = 1; i <= samples; i++)
-            {
-                await ClearTable();
+            #region saving by one record ADO.NET
+            //const int samples = 10;
+            //Stopwatch meanRecordStopwatch = new Stopwatch();
+            //TimeSpan recordTimeSpan = new TimeSpan();
+            //TimeSpan sampleTimeSpan = new TimeSpan();
+            //for (int i = 1; i <= samples; i++)
+            //{
+            //    await ClearTable();
 
-                stopwatch.Start();
-                foreach (var record in imported_kody)
-                {
-                    meanRecordStopwatch.Start();
-                    await SaveOneRecord(record);
-                    meanRecordStopwatch.Stop();
+            //    stopwatch.Start();
+            //    foreach (var record in imported_kody)
+            //    {
+            //        meanRecordStopwatch.Start();
+            //        await SaveOneRecord(record);
+            //        meanRecordStopwatch.Stop();
 
-                    recordTimeSpan += meanRecordStopwatch.Elapsed;
-                    meanRecordStopwatch.Restart();
-                }
-                stopwatch.Stop();
-                sampleTimeSpan += stopwatch.Elapsed;
-                stopwatch.Restart();
-            }
-            sampleTimeSpan = sampleTimeSpan.Divide(samples);
-            recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
-            Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
-            Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
-            #endregion
+            //        recordTimeSpan += meanRecordStopwatch.Elapsed;
+            //        meanRecordStopwatch.Restart();
+            //    }
+            //    stopwatch.Stop();
+            //    sampleTimeSpan += stopwatch.Elapsed;
+            //    Console.WriteLine($"Mean Saving by one Record Time is {stopwatch.Elapsed}");
 
-            //await SaveAllCollection(imported_kody);
+            //    stopwatch.Restart();
+            //}
+            //sampleTimeSpan = sampleTimeSpan.Divide(samples);
+            //recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
+            //Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
+            //Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
+            #endregion 
+
+            await SaveAllCollection(imported_kody);
 
             //await EFsaveOneRecord(imported_kody, _context);
+
+            //await DappersaveOneRecord(imported_kody, kodyPocztoweRepository);
+
+            //await DapperSaveAll(imported_kody, kodyPocztoweRepository);
         }
 
         static async Task ClearTable()
@@ -72,75 +81,132 @@ namespace AJPPABLAB1
             }
         }
 
-        //static async Task EFsaveAllCollection(List<Kody> kody, Ajppablab1Context context)
-        //{
-        //    const int samples = 1;
-        //    Stopwatch sampleStopwatch = new Stopwatch();
-        //    Stopwatch recordStopwatch = new Stopwatch();
-        //    TimeSpan recordTimeSpan = new TimeSpan();
-        //    TimeSpan sampleTimeSpan = new TimeSpan();
+        static async Task DapperSaveAll(List<Kody> kody, KodyPocztoweRepository kodyPocztoweRepository)
+        {
+            const int samples = 10;
+            Stopwatch sampleStopwatch = new Stopwatch();
+            TimeSpan recordTimeSpan = new TimeSpan();
+            TimeSpan sampleTimeSpan = new TimeSpan();
 
-        //    for (int i = 1; i <= samples; i++)
-        //    {
-        //        await ClearTable();
+            List<KodyPocztowe> kodyPocztowes = new List<KodyPocztowe>();
 
-        //        sampleStopwatch.Start();
-        //        foreach (var kod in kody)
-        //        {
-        //            recordStopwatch.Start();
+            foreach (var kod in kody)
+            {
+                var data = new KodyPocztowe
+                {
+                    adres = kod.adres,
+                    miejscowosc = kod.miejscowosc,
+                    powiat = kod.powiat,
+                    kod_pocztowy = kod.kod_pocztowy,
+                    wojewodztwo = kod.wojewodztwo
+                };
 
-        //            //context.KodyPocztowes.Add(data);
-        //            //context.SaveChanges();
+                kodyPocztowes.Add(data);
+            }
 
-        //            recordStopwatch.Stop();
-        //            recordTimeSpan += recordStopwatch.Elapsed;
-        //            recordStopwatch.Restart();
-        //        }
-        //        sampleStopwatch.Stop();
-        //        sampleTimeSpan += sampleStopwatch.Elapsed;
-        //        sampleStopwatch.Restart();
-        //    }
+            for (int i = 1; i <= samples; i++)
+            {
+                await ClearTable();
 
-        //    sampleTimeSpan = sampleTimeSpan.Divide(samples);
-        //    recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
-        //    Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
-        //    Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
-        //}
+                sampleStopwatch.Start();
 
-        //static async Task EFsaveOneRecord(List<Kody> kody, Ajppablab1Context context)
-        //{
-        //    const int samples = 1;
-        //    Stopwatch sampleStopwatch = new Stopwatch();
-        //    Stopwatch recordStopwatch = new Stopwatch();
-        //    TimeSpan recordTimeSpan = new TimeSpan();
-        //    TimeSpan sampleTimeSpan = new TimeSpan();
-   
-        //    for (int i = 1; i <= samples; i++)
-        //    {
-        //        await ClearTable();
+                await kodyPocztoweRepository.CreateKodyPocztowe(kodyPocztowes);
 
-        //        sampleStopwatch.Start();
-        //        foreach (var kod in kody)
-        //        {
-        //            recordStopwatch.Start();
+                sampleStopwatch.Stop();
+                sampleTimeSpan += sampleStopwatch.Elapsed;
+                sampleStopwatch.Restart();
+            }
 
-        //            //context.KodyPocztowes.Add(data);
-        //            //context.SaveChanges();
+            sampleTimeSpan = sampleTimeSpan.Divide(samples);
+            recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
+            Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
+            Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
+        }
 
-        //            recordStopwatch.Stop();
-        //            recordTimeSpan += recordStopwatch.Elapsed;
-        //            recordStopwatch.Restart();
-        //        }
-        //        sampleStopwatch.Stop();
-        //        sampleTimeSpan += sampleStopwatch.Elapsed;
-        //        sampleStopwatch.Restart();
-        //    }
-            
-        //    sampleTimeSpan = sampleTimeSpan.Divide(samples);
-        //    recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
-        //    Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
-        //    Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
-        //}
+        static async Task DappersaveOneRecord(List<Kody> kody, KodyPocztoweRepository kodyPocztoweRepository)
+        {
+            const int samples = 10;
+            Stopwatch sampleStopwatch = new Stopwatch();
+            Stopwatch recordStopwatch = new Stopwatch();
+            TimeSpan recordTimeSpan = new TimeSpan();
+            TimeSpan sampleTimeSpan = new TimeSpan();
+
+            for (int i = 1; i <= samples; i++)
+            {
+                await ClearTable();
+
+                sampleStopwatch.Start();
+                foreach(var kod in kody)
+                {
+                    recordStopwatch.Start();
+                    var data = new KodyPocztowe
+                    {
+                        adres = kod.adres,
+                        miejscowosc = kod.miejscowosc,
+                        powiat = kod.powiat,
+                        kod_pocztowy= kod.kod_pocztowy,
+                        wojewodztwo = kod.wojewodztwo
+                    };
+
+                    await kodyPocztoweRepository.CreateKodPocztowy(data);
+
+                    recordStopwatch.Stop();
+                    recordTimeSpan += recordStopwatch.Elapsed;
+                    recordStopwatch.Restart();
+                }
+                sampleStopwatch.Stop();
+                sampleTimeSpan += sampleStopwatch.Elapsed;
+                sampleStopwatch.Restart();
+            }
+
+            sampleTimeSpan = sampleTimeSpan.Divide(samples);
+            recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
+            Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
+            Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
+        }
+
+        static async Task EFsaveOneRecord(List<Kody> kody, Ajppablab1Context context)
+        {
+            const int samples = 10;
+            Stopwatch sampleStopwatch = new Stopwatch();
+            Stopwatch recordStopwatch = new Stopwatch();
+            TimeSpan recordTimeSpan = new TimeSpan();
+            TimeSpan sampleTimeSpan = new TimeSpan();
+
+            for (int i = 1; i <= samples; i++)
+            {
+                await ClearTable();
+
+                sampleStopwatch.Start();
+                for(int j = 0; j < kody.Count; j++)
+                {
+                    recordStopwatch.Start();
+                    var data = new KodyPocztoweEf
+                    {
+                        Adres = kody[j].adres,
+                        Miejscowosc = kody[j].miejscowosc,
+                        Powiat = kody[j].powiat,
+                        KodPocztowy = kody[j].kod_pocztowy,
+                        Wojewodztwo = kody[j].wojewodztwo
+                    };
+
+                    context.KodyPocztoweEfs.Add(data);
+
+                    recordStopwatch.Stop();
+                    recordTimeSpan += recordStopwatch.Elapsed;
+                    recordStopwatch.Restart();
+                }
+                context.SaveChanges();
+                sampleStopwatch.Stop();
+                sampleTimeSpan += sampleStopwatch.Elapsed;
+                sampleStopwatch.Restart();
+            }
+
+            sampleTimeSpan = sampleTimeSpan.Divide(samples);
+            recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
+            Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
+            Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
+        }
 
         static async Task SaveOneRecord(Kody kody)
         {
@@ -169,7 +235,7 @@ namespace AJPPABLAB1
 
         static async Task SaveAllCollection(List<Kody> kody)
         {
-            const int samples = 1;
+            const int samples = 10;
             Stopwatch stopwatch = new Stopwatch();
 
             Stopwatch meanRecordStopwatch = new Stopwatch();
@@ -212,6 +278,8 @@ namespace AJPPABLAB1
                 }
                 stopwatch.Stop();
                 sampleTimeSpan += stopwatch.Elapsed;
+                Console.WriteLine($"Mean Saving by one Record Time is {stopwatch.Elapsed}");
+
                 stopwatch.Restart();
             }
 
@@ -232,7 +300,7 @@ namespace AJPPABLAB1
                 MissingFieldFound = null,
             };
 
-            using(var reader = new StreamReader(@"C:\Users\oleks\Projects\ajp\AJP-PAB-LAB1\kody.csv"))
+            using(var reader = new StreamReader(@"C:\Users\oleksii.hudzishevsky\Projects\ajp\PAB\AJP-PAB-LAB1\kody.csv"))
             using(var csv = new CsvReader(reader, csvConfig))
             {
                 imported_kody = csv.GetRecords<Kody>().ToList();
