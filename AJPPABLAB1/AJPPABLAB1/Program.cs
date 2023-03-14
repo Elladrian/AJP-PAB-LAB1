@@ -31,34 +31,34 @@ namespace AJPPABLAB1
             stopwatch.Restart();
 
             #region saving by one record ADO.NET
-            //const int samples = 10;
-            //Stopwatch meanRecordStopwatch = new Stopwatch();
-            //TimeSpan recordTimeSpan = new TimeSpan();
-            //TimeSpan sampleTimeSpan = new TimeSpan();
-            //for (int i = 1; i <= samples; i++)
-            //{
-            //    await ClearTable();
+            const int samples = 10;
+            Stopwatch meanRecordStopwatch = new Stopwatch();
+            TimeSpan recordTimeSpan = new TimeSpan();
+            TimeSpan sampleTimeSpan = new TimeSpan();
+            for (int i = 1; i <= samples; i++)
+            {
+                await ClearTable();
 
-            //    stopwatch.Start();
-            //    foreach (var record in imported_kody)
-            //    {
-            //        meanRecordStopwatch.Start();
-            //        await SaveOneRecord(record);
-            //        meanRecordStopwatch.Stop();
+                stopwatch.Start();
+                foreach (var record in imported_kody)
+                {
+                    meanRecordStopwatch.Start();
+                    await SaveOneRecord(record);
+                    meanRecordStopwatch.Stop();
 
-            //        recordTimeSpan += meanRecordStopwatch.Elapsed;
-            //        meanRecordStopwatch.Restart();
-            //    }
-            //    stopwatch.Stop();
-            //    sampleTimeSpan += stopwatch.Elapsed;
-            //    Console.WriteLine($"Mean Saving by one Record Time is {stopwatch.Elapsed}");
+                    recordTimeSpan += meanRecordStopwatch.Elapsed;
+                    meanRecordStopwatch.Restart();
+                }
+                stopwatch.Stop();
+                sampleTimeSpan += stopwatch.Elapsed;
+                Console.WriteLine($"Mean Saving by one Record Time is {stopwatch.Elapsed}");
 
-            //    stopwatch.Restart();
-            //}
-            //sampleTimeSpan = sampleTimeSpan.Divide(samples);
-            //recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
-            //Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
-            //Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
+                stopwatch.Restart();
+            }
+            sampleTimeSpan = sampleTimeSpan.Divide(samples);
+            recordTimeSpan = recordTimeSpan.Divide(imported_kody.Count * samples);
+            Console.WriteLine($"Mean Saving by one Record Time is {sampleTimeSpan}");
+            Console.WriteLine($"Mean Record Saving Time is {recordTimeSpan}\n");
             #endregion 
 
             //await SaveAllCollection(imported_kody);
